@@ -9,3 +9,19 @@ export type FunctionNode = Node<
   "function-node"
 >;
 export type AppNode = BuiltInNode | FunctionNode;
+
+export type IdeaInputNode = Node<
+  {
+    label: string;
+    onInput: (idea: string) => void;
+  },
+  'ideaInput'
+>;
+
+export type RefinementNodeType = Node<
+  {
+    idea: string;
+    onRefine: (refinedIdea: string) => void;
+  },
+  "refinement"
+>;
