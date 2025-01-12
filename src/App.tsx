@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   ReactFlow,
   Background,
@@ -16,6 +16,8 @@ import { RunButton } from "./components/RunButton";
 import { RunReportPanel } from "./components/RunReportPanel";
 import { Logo } from "./components/Logo";
 import { IdeaInputNodeData, RefinementNodeData } from "./nodes/types";
+
+import debounce  from "lodash/debounce";
 
 export default function App() {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
@@ -62,15 +64,28 @@ export default function App() {
     [setNodes]
   );
   
+  const debouncedUpdateNodeData = useMemo(
+    () => debounce(updateNodeData, 500), 
+    [updateNodeData]
+  );
 
-  const handleIdeaInput = (newIdea: string) => {
-    setIdea(newIdea);
-    updateNodeData("refinement", { idea: newIdea });
-  };
+  const handleIdeaInput = useCallback(
+    (newIdea: string) => {
+      setIdea(newIdea);
+      debouncedUpdateNodeData("refinement", { idea: newIdea });
+    },
+    [debouncedUpdateNodeData]
+  );
 
   const handleRefinementOutput = (newRefinedIdea: string) => {
     setRefinedIdea(newRefinedIdea);
   }
+
+  useEffect(() => {
+    return () => {
+      debouncedUpdateNodeData.cancel();
+    };
+  }, [debouncedUpdateNodeData]);
 
   return (
     <ReactFlow
