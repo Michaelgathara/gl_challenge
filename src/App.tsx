@@ -16,6 +16,7 @@ import { RunButton } from "./components/RunButton";
 import { RunReportPanel } from "./components/RunReportPanel";
 import { Logo } from "./components/Logo";
 import { IdeaInputNodeData, RefinementNodeData } from "./nodes/types";
+import { refineIdea } from "./services/openai";
 
 import debounce  from "lodash/debounce";
 
@@ -77,9 +78,31 @@ export default function App() {
     [debouncedUpdateNodeData]
   );
 
-  const handleRefinementOutput = (newRefinedIdea: string) => {
-    setRefinedIdea(newRefinedIdea);
-  }
+  const handleRefine = useCallback(
+    async (nodeId: string, idea: string) => {
+      await updateNodeData(nodeId, { isLoading: true, error: null });
+
+      try {
+        const { refinedIdea } = await refineIdea(idea);
+        await updateNodeData(nodeId, { refinedIdea, isLoading: false });
+      } catch (error: any) {
+        await updateNodeData(nodeId, { error: error.message, isLoading: false });
+      }
+    },
+    [updateNodeData]
+  );
+
+  useEffect(() => {
+    const refinementNode = nodes.find((node) => node.id === "refinement");
+    if (
+      refinementNode &&
+      refinementNode.type === "refinement" && // Type guard but this is mad janky
+      (refinementNode.data as RefinementNodeData).idea
+    ) {
+      handleRefine("refinement", (refinementNode.data as RefinementNodeData).idea);
+    }
+  }, [nodes, handleRefine]);
+  
 
   useEffect(() => {
     return () => {
@@ -104,6 +127,7 @@ export default function App() {
       <RunReportPanel
         isOpen={isPanelOpen}
         onClose={() => setIsPanelOpen(false)}
+        nodes={nodes}
       />
     </ReactFlow>
   );

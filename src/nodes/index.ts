@@ -20,8 +20,11 @@ export const initialNodes: CustomNode[] = [
     position: { x: 300, y: 0 },
     data: {
       idea: "",
+      refinedIdea: "",
       onRefine: (refinedIdea: string) =>
         console.log("Refined Idea:", refinedIdea),
+      isLoading: false,
+      error: null,
     },
   },
 ];

@@ -1,24 +1,28 @@
-import { NodeProps, Handle, Position } from "@xyflow/react";
-import { useEffect, useState } from "react";
-import type { RefinementNodeType } from "./types";
+// src/nodes/RefinementNode.tsx
 
-export function RefinementNode({ data }:  NodeProps<RefinementNodeType>) {
-  const [refinedIdea, setRefinedIdea] = useState("");
+import React from "react";
+import { Handle, Position } from "@xyflow/react";
+import { RefinementNodeData } from "./types";
 
-  useEffect(() => {
-    if (data.idea) {
-      // TODO: API CALL
-      setRefinedIdea(`Refined: ${data.idea}`);
-      data.onRefine(`Refined: ${data.idea}`);
-    }
-  }, [data.idea]);
+type Props = {
+  data: RefinementNodeData;
+};
 
+export const RefinementNode: React.FC<Props> = ({ data }) => {
   return (
-    <div className="p-4 border rounded bg-white shadow">
-      <div className="font-bold text-gray-800">Refinement Node</div>
-      <p className="mt-2 text-sm text-gray-600">{refinedIdea || "Waiting for input..."}</p>
+    <div className="p-4 bg-blue-100 rounded-lg shadow-md">
+      <h3 className="font-bold mb-2">Refinement</h3>
+      {data.isLoading ? (
+        <p className="text-gray-500">Refining idea...</p>
+      ) : data.error ? (
+        <p className="text-red-500">Error: {data.error}</p>
+      ) : data.refinedIdea ? (
+        <p className="text-gray-800">{data.refinedIdea}</p>
+      ) : (
+        <p className="text-gray-500">No refined idea yet.</p>
+      )}
       <Handle type="target" position={Position.Left} />
       <Handle type="source" position={Position.Right} />
     </div>
   );
-}
+};

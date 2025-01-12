@@ -8,7 +8,10 @@ export type IdeaInputNodeData = {
 
 export type RefinementNodeData = {
   idea: string;
+  refinedIdea: string;
   onRefine: (refinedIdea: string) => void;
+  isLoading: boolean;
+  error: string | null;
 };
 
 export type IdeaInputNode = Node<IdeaInputNodeData, "ideaInput">;

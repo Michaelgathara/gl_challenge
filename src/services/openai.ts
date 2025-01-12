@@ -1,6 +1,8 @@
 import OpenAI from "openai";
-import { OPENAI_MODEL } from "../config";
-const openai = new OpenAI();
+import { OPENAI_API_KEY, OPENAI_MODEL } from "../config";
+
+// DO NOT RUN THIS IN PROD BTW JUST CAUSE YOU CAN EASILY EXPOSE YOUR API KEY HERE
+const openai = new OpenAI({apiKey: OPENAI_API_KEY, dangerouslyAllowBrowser: true});
 
 export interface RefineIdeaResponse {
   refinedIdea: string;
