@@ -1,27 +1,18 @@
 import type { Node, BuiltInNode } from "@xyflow/react";
 
-export type FunctionNode = Node<
-  {
-    label: string;
-    func?: (input: any) => any;
-    functionName: string;
-  },
-  "function-node"
->;
-export type AppNode = BuiltInNode | FunctionNode;
+// Node-specific types for data
+export type IdeaInputNodeData = {
+  label: string;
+  onInput: (idea: string) => void;
+};
 
-export type IdeaInputNode = Node<
-  {
-    label: string;
-    onInput: (idea: string) => void;
-  },
-  'ideaInput'
->;
+export type RefinementNodeData = {
+  idea: string;
+  onRefine: (refinedIdea: string) => void;
+};
 
-export type RefinementNodeType = Node<
-  {
-    idea: string;
-    onRefine: (refinedIdea: string) => void;
-  },
-  "refinement"
->;
+export type IdeaInputNode = Node<IdeaInputNodeData, "ideaInput">;
+
+export type RefinementNodeType = Node<RefinementNodeData, "refinement">;
+
+export type CustomNode = BuiltInNode | IdeaInputNode | RefinementNodeType;
