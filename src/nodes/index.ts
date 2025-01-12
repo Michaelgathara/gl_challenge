@@ -11,7 +11,6 @@ export const initialNodes: CustomNode[] = [
     position: { x: 0, y: 0 },
     data: {
       label: "Enter Your Idea",
-      onInput: (idea: string) => console.log("Idea Entered:", idea),
     },
   },
   {
@@ -21,8 +20,6 @@ export const initialNodes: CustomNode[] = [
     data: {
       idea: "",
       refinedIdea: "",
-      onRefine: (refinedIdea: string) =>
-        console.log("Refined Idea:", refinedIdea),
       isLoading: false,
       error: null,
     },

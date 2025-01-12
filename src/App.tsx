@@ -19,6 +19,7 @@ import { IdeaInputNodeData, RefinementNodeData } from "./nodes/types";
 import { refineIdea } from "./services/openai";
 
 import debounce  from "lodash/debounce";
+import { IdeaInputNode } from "./nodes/IdeaInputNode";
 
 export default function App() {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
@@ -83,6 +84,7 @@ export default function App() {
       await updateNodeData(nodeId, { isLoading: true, error: null });
 
       try {
+        console.log("Refining idea: ", idea);
         const { refinedIdea } = await refineIdea(idea);
         await updateNodeData(nodeId, { refinedIdea, isLoading: false });
       } catch (error: any) {
