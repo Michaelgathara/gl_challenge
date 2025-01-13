@@ -4,7 +4,6 @@ import { OPENAI_API_KEY, OPENAI_MODEL } from "../config";
 // DO NOT RUN THIS IN PROD BTW JUST CAUSE YOU CAN EASILY EXPOSE YOUR API KEY HERE
 const openai = new OpenAI({ apiKey: OPENAI_API_KEY, dangerouslyAllowBrowser: true });
 
-// Define response interfaces
 export interface RefineIdeaResponse {
   refinedIdea: string;
 }
@@ -13,7 +12,6 @@ export interface ArchitectureResponse {
   arch: string;
 }
 
-// System prompts as constants
 const REFINE_IDEA_SYSTEM_PROMPT = `
   You are an expert assistant specializing in idea refinement and enhancement. 
   Your primary function is to analyze concepts, distill them to their essential elements, 
@@ -33,7 +31,6 @@ const PROPOSE_ARCH_SYSTEM_PROMPT = `
   tailored system designs that drive successful software development projects.
 `;
 
-// Generic function to create OpenAI completions
 const createCompletion = async (
   systemPrompt: string,
   userPrompt: string
@@ -54,7 +51,6 @@ const createCompletion = async (
   }
 };
 
-// Function to refine the idea
 export const refineIdea = async (idea: string): Promise<RefineIdeaResponse> => {
   const userPrompt = `
     Please refine the following software idea, making it clearer and more detailed:
@@ -68,7 +64,6 @@ export const refineIdea = async (idea: string): Promise<RefineIdeaResponse> => {
   return { refinedIdea };
 };
 
-// Function to propose architecture
 export const proposeArch = async (refinedIdea: string): Promise<ArchitectureResponse> => {
   const userPrompt = `
     Please propose an architecture for the following software idea, making it easier to start on coding and system design and more detailed:

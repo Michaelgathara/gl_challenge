@@ -6,6 +6,11 @@ export const initialEdges = [
     source: 'ideaInput',
     target: 'refinement',
   },
+  {
+    id: 'edge-2',
+    source: 'refinement',
+    target: 'arch',
+  }
 ];
 
 export const edgeTypes = {

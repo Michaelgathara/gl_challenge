@@ -12,8 +12,17 @@ export type RefinementNodeData = {
   error: string | null;
 };
 
+export type ArchNodeData = {
+  arch: string;
+  isLoading: boolean;
+  error: string | null;
+};
+
+
 export type IdeaInputNode = Node<IdeaInputNodeData, "ideaInput">;
 
 export type RefinementNodeType = Node<RefinementNodeData, "refinement">;
 
-export type CustomNode = IdeaInputNode | RefinementNodeType;
+export type ArchNode = Node<ArchNodeData, "arch">;
+
+export type CustomNode = IdeaInputNode | RefinementNodeType | ArchNode;

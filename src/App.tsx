@@ -12,18 +12,15 @@ import "@xyflow/react/dist/style.css";
 
 import { initialNodes, nodeTypes } from "./nodes";
 import { initialEdges, edgeTypes } from "./edges";
-import { RunButton } from "./components/RunButton";
-import { RunReportPanel } from "./components/RunReportPanel";
 import { Logo } from "./components/Logo";
-import { IdeaInputNodeData, RefinementNodeData } from "./nodes/types";
-import { refineIdea } from "./services/openai";
+import { ArchNodeData, IdeaInputNodeData, RefinementNodeData } from "./nodes/types";
+import { proposeArch, refineIdea } from "./services/openai";
 
 import debounce  from "lodash/debounce";
 
 export default function App() {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
-  const [isPanelOpen, setIsPanelOpen] = useState(false);
 
   const onConnect: OnConnect = useCallback(
     (connection) => setEdges((edges) => addEdge(connection, edges)),
@@ -31,7 +28,7 @@ export default function App() {
   );
 
   const updateNodeData = useCallback(
-    (nodeId: string, newData: Partial<IdeaInputNodeData> | Partial<RefinementNodeData>) => {
+    (nodeId: string, newData: Partial<IdeaInputNodeData> | Partial<RefinementNodeData> | Partial<ArchNodeData>) => {
       setNodes((nds) =>
         nds.map((node) => {
           if (node.id === nodeId) {
@@ -51,6 +48,15 @@ export default function App() {
                 data: {
                   ...data,
                   ...(newData as Partial<RefinementNodeData>),
+                },
+              };
+            } else if (node.type === "arch") {
+              const data = node.data as ArchNodeData;
+              return {
+                ...node,
+                data: {
+                  ...data,
+                  ...(newData as Partial<ArchNodeData>),
                 },
               };
             }
@@ -81,6 +87,21 @@ export default function App() {
     },
     [updateNodeData]
   );  
+
+  const handleArch = useCallback(
+    async (nodeId: string, refinedIdea: string) => {
+      await updateNodeData(nodeId, { isLoading: true, error: null});
+
+      try {
+        console.log("Generating arch: ", refinedIdea);
+        const { arch } = await proposeArch(refinedIdea);
+        await updateNodeData(nodeId, { arch, isLoading: false });
+      } catch (error: any) {
+        await updateNodeData(nodeId, {error: error.message, isLoading: false });
+      }
+    }, 
+    [updateNodeData]
+  );
 
   useEffect(() => {
     const ideaNode = nodes.find((node) => node.type === "ideaInput");
@@ -117,6 +138,25 @@ export default function App() {
   }, [debouncedUpdateNodeData]);
 
   useEffect(() => {
+    const refinementNode = nodes.find((node) => node.id === "refinement");
+    const archNode = nodes.find((node) => node.type === "arch");
+
+    if (refinementNode && archNode) {
+      const refinedIdea = (refinementNode.data as RefinementNodeData).refinedIdea;
+      const currentArch = (archNode.data as ArchNodeData).arch;
+
+      console.log(
+        `RefinementNode refinedIdea: "${refinedIdea}", ArchNode arch: "${currentArch}"`
+      );
+
+      if (refinedIdea && !(archNode.data as ArchNodeData).isLoading && !(archNode.data as ArchNodeData).arch) {
+        console.log("Refined idea available. Generating architecture.");
+        handleArch("arch", refinedIdea);
+      }
+    }
+  }, [nodes, handleArch]);
+
+  useEffect(() => {
     return () => {
       debouncedUpdateNodeData.cancel();
     };
@@ -135,12 +175,6 @@ export default function App() {
     >
       <Background />
       <Logo />
-      <RunButton onRun={() => setIsPanelOpen(true)} />
-      <RunReportPanel
-        isOpen={isPanelOpen}
-        onClose={() => setIsPanelOpen(false)}
-        nodes={nodes}
-      />
     </ReactFlow>
   );
 }

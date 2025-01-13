@@ -3,6 +3,7 @@ import type { NodeTypes } from "@xyflow/react";
 import { IdeaInputNode } from "./IdeaInputNode";
 import { RefinementNode } from "./RefinementNode";
 import { CustomNode } from "./types";
+import { ArchNode } from "./ArchitectureNode";
 
 export const initialNodes: CustomNode[] = [
   {
@@ -24,6 +25,16 @@ export const initialNodes: CustomNode[] = [
       error: null,
     },
   },
+  {
+    id: "arch",
+    type: "arch",
+    position: { x: 600, y: 0 },
+    data: {
+      arch: "",
+      isLoading: false,
+      error: null,
+    },
+  },
 ];
 
 
@@ -31,4 +42,5 @@ export const initialNodes: CustomNode[] = [
 export const nodeTypes = {
   "ideaInput": IdeaInputNode,
   "refinement": RefinementNode,
+  "arch": ArchNode,
 } satisfies NodeTypes;
