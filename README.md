@@ -10,6 +10,9 @@ Refiner is a powerful tool designed to transform your initial idea into a well-d
 
 4. **[Roadmap Feature] Give you the initial code for the idea**
 
+# Demo
+[![Refiner Demo](https://img.youtube.com/vi/1xjpwHac-PU/maxresdefault.jpg)](https://www.youtube.com/watch?v=1xjpwHac-PU)
+
 
 ## Getting Started
 
@@ -21,7 +24,6 @@ cd gl_challenge
 
 2. Acquire [OpenAI API Keys](https://playground.openai.com)
     - Copy the `.env.example` file while renaming to `.env` and paste your API key in the `VITE_OPENAI_API_KEY` slot
-    - You can also choose your model of choice
 
 3. Install dependencies:
 
