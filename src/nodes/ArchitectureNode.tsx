@@ -16,7 +16,7 @@ export const ArchNode: React.FC<Props> = ({ data }) => {
     <div className="p-4 bg-blue-100 rounded-lg shadow-md">
       <h3 className="font-bold mb-2">Architecture</h3>
       {data.isLoading ? (
-        <p className="text-gray-500">Refining idea...</p>
+        <p className="text-gray-500">Architecting idea...</p>
       ) : data.error ? (
         <p className="text-red-500">Error: {data.error}</p>
       ) : data.arch ? (
