@@ -28,7 +28,7 @@ export const initialNodes: CustomNode[] = [
   {
     id: "arch",
     type: "arch",
-    position: { x: 600, y: 0 },
+    position: { x: 1800, y: 0 },
     data: {
       arch: "",
       isLoading: false,
