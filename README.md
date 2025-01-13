@@ -21,6 +21,7 @@ cd gl_challenge
 
 2. Acquire [OpenAI API Keys](https://playground.openai.com)
     - Copy the `.env.example` file while renaming to `.env` and paste your API key in the `VITE_OPENAI_API_KEY` slot
+    - You can also choose your model of choice
 
 3. Install dependencies:
 
