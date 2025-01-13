@@ -3,6 +3,9 @@
 import React from "react";
 import { Handle, Position } from "@xyflow/react";
 import { RefinementNodeData } from "./types";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+import rehypeSanitize from "rehype-sanitize";
 
 type Props = {
   data: RefinementNodeData;
@@ -17,7 +20,12 @@ export const RefinementNode: React.FC<Props> = ({ data }) => {
       ) : data.error ? (
         <p className="text-red-500">Error: {data.error}</p>
       ) : data.refinedIdea ? (
-        <p className="text-gray-800">{data.refinedIdea}</p>
+        <ReactMarkdown
+          children={data.refinedIdea}
+          remarkPlugins={[remarkGfm]}
+          rehypePlugins={[rehypeSanitize]}
+          className="prose"
+        />
       ) : (
         <p className="text-gray-500">No refined idea yet.</p>
       )}

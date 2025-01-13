@@ -19,15 +19,11 @@ import { IdeaInputNodeData, RefinementNodeData } from "./nodes/types";
 import { refineIdea } from "./services/openai";
 
 import debounce  from "lodash/debounce";
-import { IdeaInputNode } from "./nodes/IdeaInputNode";
 
 export default function App() {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
   const [isPanelOpen, setIsPanelOpen] = useState(false);
-
-  const [idea, setIdea] = useState("");
-  const [refinedIdea, setRefinedIdea] = useState("");
 
   const onConnect: OnConnect = useCallback(
     (connection) => setEdges((edges) => addEdge(connection, edges)),
