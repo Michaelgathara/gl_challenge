@@ -67,22 +67,14 @@ export default function App() {
   );
   
   const debouncedUpdateNodeData = useMemo(
-    () => debounce(updateNodeData, 500), 
+    () => debounce(updateNodeData, 1000), 
     [updateNodeData]
-  );
-
-  const handleIdeaInput = useCallback(
-    (newIdea: string) => {
-      setIdea(newIdea);
-      debouncedUpdateNodeData("refinement", { idea: newIdea });
-    },
-    [debouncedUpdateNodeData]
   );
 
   const handleRefine = useCallback(
     async (nodeId: string, idea: string) => {
       await updateNodeData(nodeId, { isLoading: true, error: null });
-
+  
       try {
         console.log("Refining idea: ", idea);
         const { refinedIdea } = await refineIdea(idea);
@@ -92,19 +84,41 @@ export default function App() {
       }
     },
     [updateNodeData]
-  );
+  );  
+
+  useEffect(() => {
+    const ideaNode = nodes.find((node) => node.type === "ideaInput");
+    const refinementNode = nodes.find((node) => node.type === "refinement");
+    
+    if (ideaNode && refinementNode) {
+      const ideaLabel = (ideaNode.data as IdeaInputNodeData).label; // yet another janky type setting here
+      const currentRefinementIdea = (refinementNode.data as RefinementNodeData).idea;
+      
+      if (ideaLabel !== currentRefinementIdea) {
+        debouncedUpdateNodeData("refinement", { idea: ideaLabel });
+      }
+    }
+  }, [nodes, debouncedUpdateNodeData]);
 
   useEffect(() => {
     const refinementNode = nodes.find((node) => node.id === "refinement");
+    
     if (
       refinementNode &&
-      refinementNode.type === "refinement" && // Type guard but this is mad janky
-      (refinementNode.data as RefinementNodeData).idea
+      refinementNode.type === "refinement" &&
+      refinementNode.data.idea &&
+      !refinementNode.data.isLoading && 
+      !refinementNode.data.refinedIdea
     ) {
-      handleRefine("refinement", (refinementNode.data as RefinementNodeData).idea);
+      handleRefine("refinement", refinementNode.data.idea);
     }
   }, [nodes, handleRefine]);
-  
+
+  useEffect(() => {
+    return () => {
+      debouncedUpdateNodeData.cancel();
+    };
+  }, [debouncedUpdateNodeData]);
 
   useEffect(() => {
     return () => {

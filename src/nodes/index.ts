@@ -10,7 +10,7 @@ export const initialNodes: CustomNode[] = [
     type: "ideaInput",
     position: { x: 0, y: 0 },
     data: {
-      label: "Enter Your Idea",
+      label: "",
     },
   },
   {
@@ -25,6 +25,8 @@ export const initialNodes: CustomNode[] = [
     },
   },
 ];
+
+
 
 export const nodeTypes = {
   "ideaInput": IdeaInputNode,
